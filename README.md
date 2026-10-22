@@ -11,4 +11,4 @@ Place UCS files in SrcDir
 Run Windows Powershell ISE as Administrator
 
 # Steps to run script:
-Click on Run script in Windows Powershell ISE
+Click on Run script button in Windows Powershell ISE
