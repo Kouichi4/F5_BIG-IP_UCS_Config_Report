@@ -1,6 +1,8 @@
 # Prerequisites:
 
-Download and install 7-zip from https://www.7-zip.org/
+7-zip installed
+
+Microsoft Office Excel installed
 
 Create SrcDir (e.g., c:\Temp\ExtractSrc) and DstDir (e.g., c:\Temp\ExtractDst) folder
 
