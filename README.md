@@ -5,3 +5,5 @@
 # Place ReportTemplate (e.g., F5 BIG-IP UCS Config Template v1.0.xlsx) in SrcDir
 # Place UCS files in SrcDir
 # Run Windows Powershell ISE as Administrator
+
+Click on Run script in Windows Powershell ISE
