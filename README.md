@@ -6,7 +6,7 @@ Create SrcDir (e.g., c:\Temp\ExtractSrc) and DstDir (e.g., c:\Temp\ExtractDst) f
 
 Place ReportTemplate (e.g., F5 BIG-IP UCS Config Template v1.0.xlsx) in SrcDir
 
-Place UCS files in SrcDir
+Place one or more UCS files in SrcDir (recommend to test with one UCS file first)
 
 Run Windows Powershell ISE as Administrator
 
