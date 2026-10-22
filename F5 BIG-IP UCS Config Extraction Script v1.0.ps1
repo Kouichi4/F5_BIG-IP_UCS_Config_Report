@@ -38,7 +38,6 @@
 # Create SrcDir and DstDir folder
 # Place ReportTemplate in SrcDir
 # Place UCS files in SrcDir
-# Place Extraction Template in SrcDir
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
