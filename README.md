@@ -2,7 +2,7 @@
 
 7-zip installed
 
-Microsoft Office Excel installed
+Microsoft Excel installed
 
 Create SrcDir (e.g., c:\Temp\ExtractSrc) and DstDir (e.g., c:\Temp\ExtractDst) folder
 
