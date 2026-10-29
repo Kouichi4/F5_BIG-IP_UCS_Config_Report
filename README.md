@@ -1,5 +1,5 @@
 # About this project
-It started out as simple excel templates to collapse multiline to single line config and using formulas to display (e.g., VS, pool) configurations.
+It started out with simple excel templates to collapse multiline to single line config and using formulas to display (e.g., VS, pool) configurations.
 
 It eventually grow to a point whereby manual extraction of configuration is no longer feasible as there are too many configuration items in different excel templates and there is a need to correlate the data across different templates.
 
