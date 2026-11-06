@@ -1,4 +1,4 @@
-﻿# This script performs the following tasks
+# This script performs the following tasks
 
 # Part 1: Extract specific logs from raw data
 # 1st level decompression of ucs files using DeGZip-File function
@@ -29,15 +29,14 @@
 # Extract device certificate information from \var\tmp\cert_temp\conf\ssl.crt file
 # Extract certificate information from \var\tmp\gtm_tmp\gtm directory
 # Export the certificate details into Excel
-# Log excel paste error to $DstDir\$path-paste_errors.log
 
 # Prerequisites:
 
-# Run Windows Powershell ISE as Administrator
 # Download and install 7-zip from https://www.7-zip.org/
 # Create SrcDir and DstDir folder
 # Place ReportTemplate in SrcDir
 # Place UCS files in SrcDir
+# Run Windows Powershell ISE as Administrator
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass
 
@@ -64,7 +63,7 @@ $7zExe = "$7zDir\7z.exe"
 $SrcDir = "c:\Temp\ExtractSrc"
 $DstDir = "c:\Temp\ExtractDst"
 $Ext = "ucs"
-$ReportTemplate1 = "F5 BIG-IP UCS Config Template v1.0.xlsx"
+$ReportTemplate1 = "F5 BIG-IP UCS Config Template v1.2.xlsx"
 
 $Date = (Get-Date -Format yyyyMMdd) + "-" + (Get-Date -Format HHmmss) + ".xlsx"
 
@@ -354,6 +353,11 @@ if (Test-Path -Path $bigipgtmPath) {
     gc $bigipoutputPath -ReadCount 10000 | % { $_ } | sls "ltm monitor " | Out-File -width 10000 $SrcDir\$path.3\ltmmonitor1.txt
     gc $SrcDir\$path.3\ltmmonitor1.txt | Sort | gu | ? {$_ -match '\S'}  | Out-File -width 10000 $DstDir\$path\ltmmonitor.txt
 
+    Write-Host -ForegroundColor black -BackgroundColor Yellow "Retrieving persistence data"
+    gc $bigipoutputPath -ReadCount 10000 | % { $_ } | sls "ltm persistence " | Out-File -width 10000 $SrcDir\$path.3\ltmpersistence1.txt
+    gc $SrcDir\$path.3\ltmpersistence1.txt | Sort | gu | ? {$_ -match '\S'}  | Out-File -width 10000 $DstDir\$path\ltmpersistence.txt
+
+
 # Extracts config from bigip_base.conf
 
     Write-Host -ForegroundColor black -BackgroundColor Yellow "Retrieving hostname data"
@@ -485,7 +489,24 @@ if (Test-Path -Path $bigipgtmPath) {
  
     # Check if the policy file exists
     if (Test-Path -Path $policyFile) {
-        Get-Content $policyFile | Out-File -Width 10000 "$DstDir\$path\asmpolicy.txt"
+#        Get-Content $policyFile | Out-File -Width 10000 "$DstDir\$path\asmpolicy.txt"
+        $lines = Get-Content $policyFile -Encoding UTF8
+        $output = New-Object System.Collections.Generic.List[string]
+
+        for ($i = 0; $i -lt $lines.Count; $i++) {
+        $line = $lines[$i]
+
+        # While the current line ends with a backslash, append the next line
+        while ($line.EndsWith('\') -and ($i + 1) -lt $lines.Count) {
+            $line = $line.TrimEnd('\') + $lines[$i + 1]
+            $i++
+        }
+
+    $output.Add($line)
+}
+
+$output | Set-Content "$DstDir\$path\asmpolicy.txt" -Encoding UTF8
+
     } else {
         Write-Host -ForegroundColor Yellow "ASM policy file not found at $policyFile - skipping this section"
     }
@@ -645,6 +666,11 @@ if (Test-Path -Path $bigipgtmPath) {
         gc $bigippartitionoutputPath -ReadCount 10000 | % { $_ } | sls "ltm monitor " | Out-File -width 10000 $SrcDir\$path.3\config\partitions\$partition\ltmmonitor1.txt
         gc $SrcDir\$path.3\config\partitions\$partition\ltmmonitor1.txt | Sort | gu | ? {$_ -match '\S'}  | Out-File -width 10000 $DstDir\$path\config\partitions\$partition\ltmmonitor.txt
         gc $DstDir\$path\config\partitions\$partition\ltmmonitor.txt | ac $DstDir\$path\ltmmonitor.txt
+
+        Write-Host -ForegroundColor black -BackgroundColor Yellow "Retrieving persistence data"
+        gc $bigippartitionoutputPath -ReadCount 10000 | % { $_ } | sls "ltm persistence " | Out-File -width 10000 $SrcDir\$path.3\config\partitions\$partition\ltmpersistence1.txt
+        gc $SrcDir\$path.3\config\partitions\$partition\ltmpersistence1.txt | Sort | gu | ? {$_ -match '\S'}  | Out-File -width 10000 $DstDir\$path\config\partitions\$partition\ltmpersistence.txt
+        gc $DstDir\$path\config\partitions\$partition\ltmpersistence.txt | ac $DstDir\$path\ltmpersistence.txt
 
     }
 
